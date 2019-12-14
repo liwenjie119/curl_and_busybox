@@ -1,0 +1,47 @@
+#
+# This is free software, lisence use MIT.
+# 
+# Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+# 
+# <https://github.com/KFERMercer/OpenWrt-CI>
+#
+
+name: Merge-upstream
+
+on:
+  push:
+    branches: 
+      - master
+  schedule:
+    - cron: 30 19 * * *
+
+jobs:
+  merge:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@master
+      with:
+        ref: master
+        fetch-depth: 0
+        lfs: true
+
+    - name: Set git identity
+      run : |
+            git config --global user.email "liwenjie119@126.com"
+            git config --global user.name "liwenjie119"
+            git submodule update --init --recursive
+            
+    - name: Load upstream commits
+      run: ./update.sh
+
+    - name: Push Commits
+      env:
+        DOWNSTREAM_BRANCH: master
+      run: |
+            git add zlib curl openssl busybox 
+            git commit -m "update submodule"
+            git push origin $DOWNSTREAM_BRANCH

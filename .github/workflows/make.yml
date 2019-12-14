@@ -1,0 +1,69 @@
+#
+# This is free software, lisence use MIT.
+# 
+# Copyright (C) 2019 P3TERX <https://p3terx.com>
+# Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+# 
+# <https://github.com/KFERMercer/OpenWrt-CI>
+# 
+
+name: Build my curl and busybox
+
+on:
+  push:
+    branches: 
+      - master
+  schedule:
+     - cron: 30 19 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          ref: master
+
+      - name: Set git identity
+        run : |
+            git config --global user.email "liwenjie119@126.com"
+            git config --global user.name "liwenjie119"
+            git submodule update --init --recursive
+            
+      - name: update software
+        run: |
+          sudo -E apt-get update
+          sudo -E apt-get -y install  build-essential asciidoc autoconf libtool  binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
+          #sudo -E apt-get -y install -f  gcc-aarch64-linux-gnu
+          sudo -E apt-get -y autoremove --purge
+          sudo -E apt-get clean
+          
+      - name: make busybox
+        run: |
+            ./build-busybox.sh
+
+      - name: update Commits
+        run: |
+          ./update.sh
+            
+      - name: make curl
+        run: ./build.sh
+        
+
+      
+      - name: Assemble artifact
+        run: |
+          rm -rf ./artifact/
+          mkdir -p ./artifact/
+          find ./curl/build/arm64-v8a/bin/curl | xargs -i mv -f {} ./artifact/
+          find ./busybox/_install/bin/busybox | xargs -i mv -f {} ./artifact/
+          
+     
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: curl and busybox
+          path: ./artifact/
