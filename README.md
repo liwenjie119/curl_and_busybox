@@ -2,7 +2,11 @@
 
 Compiles curl (and dependencies - zlib, openssl ) for Android
 
-##Thanks to Zackptg5
+## Thanks to Zackptg5
+
+https://github.com/Zackptg5/Curl-for-Android-Build-Script
+https://github.com/Zackptg5/curl-boringssl-android
+
 ## Prerequisites
 
 Linux
