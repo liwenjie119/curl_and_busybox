@@ -24,8 +24,9 @@ fi
 export CFLAGS="-Os -ffunction-sections -fdata-sections -fno-unwind-tables -fno-asynchronous-unwind-tables"
 export LDFLAGS="-Wl,-s -Wl,-Bsymbolic -Wl,--gc-sections"
 
-chmod +x build-zlib.sh build-openssl.sh build-curl.sh
+chmod +x build-zlib.sh build-openssl.sh build-curl.sh build-busybox.sh
 
+./build-busybox.sh
 ./build-zlib.sh
 ./build-openssl.sh
 ./build-curl.sh

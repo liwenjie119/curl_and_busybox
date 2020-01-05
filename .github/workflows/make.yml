@@ -45,11 +45,9 @@ jobs:
         run: |
           ./update.sh
           
-      - name: make busybox
-        run: |
-            ./build-busybox.sh
+
             
-      - name: make curl
+      - name: make busybox and curl
         run: ./build.sh
         
 
