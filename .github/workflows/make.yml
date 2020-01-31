@@ -47,10 +47,11 @@ jobs:
           
 
             
-      - name: make busybox and curl
-        run: ./build.sh
+      - name: make busybox
+        run: ./build-busybox.sh
         
-
+      - name: make curl
+        run: ./build.sh
       
       - name: Assemble artifact
         run: |

@@ -26,7 +26,7 @@ export LDFLAGS="-Wl,-s -Wl,-Bsymbolic -Wl,--gc-sections"
 
 chmod +x build-zlib.sh build-openssl.sh build-curl.sh build-busybox.sh
 
-./build-busybox.sh
+#./build-busybox.sh
 ./build-zlib.sh
 ./build-openssl.sh
 ./build-curl.sh
