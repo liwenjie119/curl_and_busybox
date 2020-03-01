@@ -31,7 +31,7 @@ cd ..
 
 ```
 bash
-git clone https://github.com/Zackptg5/openssl-curl-android.git
+git clone https://github.com/liwenjie119/openssl-curl-android.git
 git submodule update --init --recursive
 ```
 Edit build.sh script:

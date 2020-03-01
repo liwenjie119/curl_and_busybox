@@ -6,12 +6,25 @@
 NDK=r21
 export ANDROID_NDK_HOME=`pwd`/android-ndk-$NDK
 export HOST_TAG=linux-x86_64
-export MIN_SDK_VERSION=21
+export MIN_SDK_VERSION=r21
 
 # Set up Android NDK
+file=android-ndk-$NDK-$HOST_TAG
+if [ -f "$file" ]; then
+    echo $file exist
+else
+	file=android-ndk-$NDK-$HOST_TAG.zip
+	if [ -f "$file" ]; then
+	    echo $file exit,unzip
+		[ -d "android-ndk-$NDK" ] || unzip -qo android-ndk-$NDK-$HOST_TAG.zip
+	else
+		echo "no such zip,will download"	
 echo "Fetching Android NDK $NDK"
 [ -f "android-ndk-$NDK-$HOST_TAG.zip" ] || wget  https://dl.google.com/android/repository/android-ndk-$NDK-$HOST_TAG.zip
 [ -d "android-ndk-$NDK" ] || unzip -qo android-ndk-$NDK-$HOST_TAG.zip
+fi
+fi
+
 
 if [ -f /proc/cpuinfo ]; then
   export JOBS=$(grep flags /proc/cpuinfo | wc -l)
