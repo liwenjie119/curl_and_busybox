@@ -2,8 +2,12 @@
 
 mkdir -p build/openssl
 cd openssl
+NDK=r21
+export ANDROID_NDK_ROOT=`pwd`/../android-ndk-$NDK
+export HOST_TAG=linux-x86_64
+export MIN_SDK_VERSION=29
 
-export TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG
+export TOOLCHAIN=$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/$HOST_TAG
 PATH=$TOOLCHAIN/bin:$PATH
 
 # arm64
