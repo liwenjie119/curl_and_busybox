@@ -42,6 +42,10 @@ export MIN_SDK_VERSION=21 # or any version you want (dependent on the ndk versio
 chmod +x ./build.sh
 ./build.sh
 ```
+or
+```
+./build1.sh ARCH=<ARCH>
+```
 All compiled libs are located in `build` directory.
 
 ## Options
