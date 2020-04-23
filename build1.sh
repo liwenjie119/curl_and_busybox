@@ -33,13 +33,15 @@ TEXTRED=$(tput setaf 1)
 
 # Get latest certs
 [ -f "cacert.pm" ] || curl --remote-name --time-cond cacert.pem https://curl.haxx.se/ca/cacert.pem
-
+cp cacert.pem curl/cacert.pem
 NDK=r21
 export ANDROID_NDK_HOME=`pwd`/android-ndk-$NDK
 export ANDROID_NDK_ROOT=`pwd`/android-ndk-$NDK
 export HOST_TAG=linux-x86_64
 export MIN_SDK_VERSION=29
-
+mkdir -p build/zlib
+mkdir -p build/openssl
+mkdir -p build/curl
 
 # Set up Android NDK
 file=android-ndk-$NDK
@@ -58,7 +60,7 @@ else
 	fi
 fi
 export ANDROID_TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG/bin
-
+PATH=$ANDROID_TOOLCHAIN:$PATH
 if [ -f /proc/cpuinfo ]; then
   export JOBS=$(grep flags /proc/cpuinfo | wc -l)
 elif [ ! -z $(which sysctl) ]; then
@@ -86,8 +88,8 @@ for LARCH in $ARCH; do
   export AR=$ANDROID_TOOLCHAIN/$LARCH-linux-android-ar
   export AS=$ANDROID_TOOLCHAIN/$LARCH-linux-android-as
   export LD=$ANDROID_TOOLCHAIN/$LARCH-linux-android-ld
-  export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-android21-clang
-  export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-android21-clang++
+  export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSION-clang
+  export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSION-clang++
   export RANLIB=$ANDROID_TOOLCHAIN/$LARCH-linux-android-ranlib
   export STRIP=$ANDROID_TOOLCHAIN/$LARCH-linux-android-strip
 
@@ -96,26 +98,26 @@ for LARCH in $ARCH; do
     export AR=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ar
     export AS=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-as
     export LD=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ld
-    export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-android21eabi-clang
-    export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-android21eabi-clang++
+    export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSIONeabi-clang
+    export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSIONeabi-clang++
     export RANLIB=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ranlib
     export STRIP=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-strip
-    export CC=$ANDROID_TOOLCHAIN/armv7a-linux-androideabi21-clang
-    export CXX=$ANDROID_TOOLCHAIN/armv7a-linux-androideabi21-clang++
-    ln -sf $CC `echo $CC | sed -e "s|armv7a|arm|" -e "s|21-clang|-gcc|"`
-    ln -sf $CXX `echo $CXX | sed -e "s|armv7a|arm|" -e "s|21-clang|-gcc|"`
+    export CC=$ANDROID_TOOLCHAIN/armv7a-linux-androideabi$MIN_SDK_VERSION-clang
+    export CXX=$ANDROID_TOOLCHAIN/armv7a-linux-androideabi$MIN_SDK_VERSION-clang++
+    ln -sf $CC `echo $CC | sed -e "s|armv7a|arm|" -e "s|$MIN_SDK_VERSION-clang|-gcc|"`
+    ln -sf $CXX `echo $CXX | sed -e "s|armv7a|arm|" -e "s|$MIN_SDK_VERSION-clang|-gcc|"`
   else
-    ln -sf $CC `echo $CC | sed "s|21-clang|-gcc|"`
-    ln -sf $CXX `echo $CXX | sed "s|21-clang|-gcc|"`
+    ln -sf $CC `echo $CC | sed "s|$MIN_SDK_VERSION-clang|-gcc|"`
+    ln -sf $CXX `echo $CXX | sed "s|$MIN_SDK_VERSION-clang|-gcc|"`
   fi
-mkdir -p build/zlib
-mkdir -p build/openssl
-mkdir -p build/curl
+
 
   echogreen "Building Zlib..."
   cd zlib
   ./configure --static --archs="-arch $LARCH" --prefix=$PWD/build/$LARCH
   make -j$JOBS
+  make install
+  make clean
   [ $? -eq 0 ] || continue
   mkdir -p ../build/zlib/$LARCH
   cp -R $PWD/build/$LARCH ../build/zlib/
@@ -124,8 +126,10 @@ mkdir -p build/curl
   echogreen "Building Openssl..."
   cd openssl
   export ZLIB_DIR=$PWD/../zlib/build/$LARCH
-  ./configure enable-md2 enable-rc5 enable-tls enable-tls1_3 enable-tls1_2 enable-tls1_1 no-shared "$ARCHOS" -D__ANDROID_API__=$MIN_SDK_VERSION --prefix=$PWD/build/$ARCHOS --with-zlib-include=$ZLIB_DIR/include --with-zlib-lib=$ZLIB_DIR/lib
+  ./Configure --prefix=$PWD/build/$LARCH $ARCHOS enable-md2 enable-rc5 enable-tls enable-tls1_3 enable-tls1_2 enable-tls1_1 no-shared zlib  -D__ANDROID_API__=$MIN_SDK_VERSION  --with-zlib-include=$ZLIB_DIR/include --with-zlib-lib=$ZLIB_DIR/lib
   make depend && make -j$JOBS
+  make install_sw
+  make clean
   [ $? -eq 0 ] || continue
   mkdir -p ../build/openssl/$LARCH
   cp -R $PWD/build/$LARCH ../build/openssl/
@@ -134,8 +138,11 @@ mkdir -p build/curl
   echogreen "Building CURL..."
   cd curl
   export SSL_DIR=$PWD/../openssl/build/$LARCH
-   ./configure --enable-static --disable-shared --enable-cross-compile --with-ssl=$DIR/usr --with-zlib=$DIR/usr --host=$LARCH-linux-android --target=$LARCH-linux-android --prefix=$PWD/build/$LARCH --with-ssl=$SSL_DIR  --with-ca-bundle=cacert.pem --disable-ldap --disable-ldaps --enable-ipv6 --enable-versioned-symbols --enable-threaded-resolver
+  ./buildconf
+  ./configure --enable-static --disable-shared --enable-cross-compile  --with-zlib=$ZLIB_DIR/usr --host=$LARCH-linux-android --target=$LARCH-linux-android --prefix=$PWD/build/$LARCH --with-ssl=$SSL_DIR --with-ca-bundle=cacert.pem --disable-ldap --disable-ldaps --enable-ipv6 --enable-versioned-symbols --enable-threaded-resolver
   make curl_LDFLAGS=-all-static -j$JOBS
+  make install
+  make clean
   [ $? -eq 0 ] || continue
   mkdir -p ../build/curl/$LARCH
   cp -R $PWD/build/$LARCH ../build/curl/
