@@ -15,7 +15,7 @@ export LD=$TOOLCHAIN/bin/$TARGET_HOST-ld
 export RANLIB=$TOOLCHAIN/bin/$TARGET_HOST-ranlib
 export STRIP=$TOOLCHAIN/bin/$TARGET_HOST-strip
 
-./configure --prefix=$PWD/build/arm64-v8a
+./configure  --prefix=$PWD/build/arm64-v8a
 
 make -j$JOBS
 make install

@@ -2,7 +2,7 @@
 
 # Get latest certs
 [ -f "cacert.pm" ] || curl --remote-name --time-cond cacert.pem https://curl.haxx.se/ca/cacert.pem
-
+cp cacert.pem curl/cacert.pem
 NDK=r21
 export ANDROID_NDK_HOME=`pwd`/android-ndk-$NDK
 export ANDROID_NDK_ROOT=`pwd`/android-ndk-$NDK
