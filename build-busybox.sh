@@ -1,6 +1,6 @@
 #!/bin/bash
 cp .config busybox/.config
-gcc_version=$gcc_version
+gcc_version=gcc-linaro-7.5.0-2019.12
 
 # Set up gcc
 file=$gcc_version-x86_64_aarch64-linux-gnu
