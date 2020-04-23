@@ -12,7 +12,7 @@ name: Build my curl and busybox
 on:
   push:
     branches: 
-      - master
+      - dev
   schedule:
      - cron: 30 19 * * *
 
@@ -44,21 +44,19 @@ jobs:
       - name: update Commits
         run: |
           ./update.sh
-          
 
-            
       - name: make busybox
         run: ./build-busybox.sh
         
       - name: make curl
-        run: ./build.sh
+        run: ./build1.sh ARCH=arm64
       
       - name: Assemble artifact
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./curl/build/arm64-v8a/bin/curl | xargs -i mv -f {} ./artifact/
-          find ./busybox/_install/bin/busybox | xargs -i mv -f {} ./artifact/
+          find ./build/curl/aarch64/bin/curl | xargs -i mv -f {} ./artifact/
+          find ./build/busybox/bin/busybox | xargs -i mv -f {} ./artifact/
           
      
           
