@@ -61,8 +61,6 @@ jobs:
           find ./build/curl/aarch64/bin/curl | xargs -i mv -f {} ./artifact/
           find ./build/busybox/bin/busybox | xargs -i mv -f {} ./artifact/
           
-     
-          
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
