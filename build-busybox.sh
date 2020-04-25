@@ -1,7 +1,7 @@
 #!/bin/bash
 cp .config busybox/.config
 gcc_version=7.5.0-2019.12
-
+gcc_versionflie=7.5-2019.12
 # Set up gcc
 file=gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu
 if [ -d "$file" ]; then
@@ -14,7 +14,7 @@ else
 	else
 		echo "no such file,will download"	
 		echo "Fetching gcc"
-		[ -f "gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu.tar.xz" ] || wget  http://releases.linaro.org/components/toolchain/binaries/$gcc_version/aarch64-linux-gnu/gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu.tar.xz
+		[ -f "gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu.tar.xz" ] || wget  http://releases.linaro.org/components/toolchain/binaries/$gcc_versionflie/aarch64-linux-gnu/gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu.tar.xz
 		[ -d "gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu" ] || tar -xvJf gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu.tar.xz
 	fi
 fi
