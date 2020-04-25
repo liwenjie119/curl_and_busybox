@@ -34,7 +34,7 @@ jobs:
             
       - name: update software
         run: |
-          sudo -E apt-get update&&sudo -E apt-get grade -y
+          sudo -E apt-get update&&sudo -E apt-get upgrade -y
           sudo -E apt-get -y install build-essential libtool autoconf
           sudo -E apt-get -y install gcc-multilib
           #sudo -E apt-get -y install -f  gcc-aarch64-linux-gnu
