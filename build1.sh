@@ -98,8 +98,8 @@ for LARCH in $ARCH; do
     export AR=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ar
     export AS=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-as
     export LD=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ld
-    export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSIONeabi-clang
-    export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-android$MIN_SDK_VERSIONeabi-clang++
+    export CC=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi$MIN_SDK_VERSION-clang
+    export CXX=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi$MIN_SDK_VERSION-clang++
     export RANLIB=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-ranlib
     export STRIP=$ANDROID_TOOLCHAIN/$LARCH-linux-androideabi-strip
     export CC=$ANDROID_TOOLCHAIN/armv7a-linux-androideabi$MIN_SDK_VERSION-clang
