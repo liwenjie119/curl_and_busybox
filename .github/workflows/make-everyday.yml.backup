@@ -11,12 +11,10 @@ name: Build my curl and busybox
 
 on:
   push:
-    branches: 
+    branches:
       - master
   schedule:
-    - cron: 0 8 * * 5
-  watch:
-    types: started
+     - cron: 30 19 * * *
 
 jobs:
   build:
