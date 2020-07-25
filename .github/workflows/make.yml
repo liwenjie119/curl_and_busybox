@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
         with:
-          ref: main
+          ref: master
 
       - name: Set git identity
         run : |
