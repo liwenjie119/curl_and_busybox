@@ -139,7 +139,7 @@ for LARCH in $ARCH; do
   cd curl
   export SSL_DIR=$PWD/../openssl/build/$LARCH
   ./buildconf
-  ./configure --enable-static --disable-shared --enable-cross-compile  --with-zlib=$ZLIB_DIR/usr --host=$LARCH-linux-android --target=$LARCH-linux-android --prefix=$PWD/build/$LARCH --with-ssl=$SSL_DIR --with-ca-bundle=cacert.pem --disable-ldap --disable-ldaps --enable-ipv6 --enable-versioned-symbols --enable-threaded-resolver
+  ./configure --enable-static --disable-shared --enable-cross-compile  --with-zlib=$ZLIB_DIR/usr --host=$LARCH-linux-android --target=$LARCH-linux-android --prefix=$PWD/build/$LARCH --with-ssl=$SSL_DIR --with-ca-bundle=/system/etc/security/cacert.pem --with-ca-path=/system/etc/security/cacerts  --disable-ldap --disable-ldaps --enable-ipv6 --enable-versioned-symbols --enable-threaded-resolver
   make curl_LDFLAGS=-all-static -j$JOBS
   make install
   make clean
