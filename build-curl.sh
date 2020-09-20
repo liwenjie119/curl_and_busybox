@@ -21,7 +21,8 @@ export SSL_DIR=$PWD/../openssl/build/arm64-v8a
             --target=$TARGET_HOST \
             --prefix=$PWD/build/arm64-v8a \
             --with-ssl=$SSL_DIR \
-            --with-ca-bundle=cacert.pem \
+            --with-ca-bundle=/system/etc/security/cacert.pem \
+            --with-ca-path=/system/etc/security/cacerts \
             --disable-shared \
             --disable-verbose \
             --disable-manual \
@@ -72,6 +73,7 @@ export SSL_DIR=$PWD/../openssl/build/armeabi-v7a
             --prefix=$PWD/build/armeabi-v7a \
             --with-ssl=$SSL_DIR \
             --with-ca-bundle=/system/etc/security/cacert.pem \
+            --with-ca-path=/system/etc/security/cacerts \
             --disable-shared \
             --disable-verbose \
             --disable-manual \
@@ -122,6 +124,7 @@ export SSL_DIR=$PWD/../openssl/build/x86
             --prefix=$PWD/build/x86 \
             --with-ssl=$SSL_DIR \
             --with-ca-bundle=/system/etc/security/cacert.pem \
+            --with-ca-path=/system/etc/security/cacerts \
             --disable-shared \
             --disable-verbose \
             --disable-manual \
@@ -172,6 +175,7 @@ export SSL_DIR=$PWD/../openssl/build/x86_64
             --prefix=$PWD/build/x86_64 \
             --with-ssl=$SSL_DIR \
             --with-ca-bundle=/system/etc/security/cacert.pem \
+            --with-ca-path=/system/etc/security/cacerts \
             --disable-shared \
             --disable-verbose \
             --disable-manual \
