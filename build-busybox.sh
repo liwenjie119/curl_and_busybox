@@ -23,5 +23,6 @@ export CROSS_COMPILE=$PWD/gcc-linaro-$gcc_version-x86_64_aarch64-linux-gnu/bin/a
 cd busybox
 git checkout master
 git pull
+make oldconfig
 make -j8 ARCH=arm64  &&make -j8 ARCH=arm64  install
 cd ..
